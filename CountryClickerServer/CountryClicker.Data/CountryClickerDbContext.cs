@@ -1,0 +1,21 @@
+﻿using CountryClicker.Domain;
+using Microsoft.EntityFrameworkCore;
+using System;
+
+namespace CountryClicker.Data
+{
+    public class CountryClickerDbContext : DbContext
+    {
+        public CountryClickerDbContext(DbContextOptions options) : base(options) { }
+
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Continent> Continents { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<CustomGroup> CustomGroups { get; set; }
+        public DbSet<Player> Players { get; set; }
+        public DbSet<PlayerSprint> PlayerSprints { get; set; }
+        public DbSet<PlayerSubscription> PlayerSubscriptions { get; set; }
+        public DbSet<Sprint> Sprints { get; set; }
+        public DbSet<User> Users { get; set; }
+    }
+}
