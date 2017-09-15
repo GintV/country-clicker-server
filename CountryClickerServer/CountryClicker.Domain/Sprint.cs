@@ -9,16 +9,15 @@ namespace CountryClicker.Domain
     {
         // Table columns
         public Guid Id { get; set; }
-        public ulong Score { get; set; }
+        public long Score { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime FinishTime { get; set; }
-        public Guid GroupId { get; set; }
 
         // Navigation properties
-        [ForeignKey(nameof(GroupId))]
-        public Group Group { get; set; }
-
         [InverseProperty(nameof(PlayerSprint.Sprint))]
-        public PlayerSprint PlayerSprints { get; set; }
+        public PlayerSprint[] PlayerSprints { get; set; }
+
+        [InverseProperty(nameof(GroupSprint.Sprint))]
+        public GroupSprint[] GroupSprints { get; set; }
     }
 }

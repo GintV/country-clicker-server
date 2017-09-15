@@ -10,6 +10,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using CountryClicker.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Routing;
+using CountryClicker.Domain;
+using CountryClicker.DataService.Models.Create;
+using CountryClicker.DataService.Models.Get;
 
 namespace CountryClicker.API
 {
@@ -30,6 +34,7 @@ namespace CountryClicker.API
             {
                 options.UseSqlServer(Configuration.GetConnectionString("CountryClicker"));
             });
+            services.AddDataServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +44,14 @@ namespace CountryClicker.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            AutoMapper.Mapper.Initialize(configuration =>
+            {
+                configuration.CreateMap<Continent, ContinentGetDto>();
+                configuration.CreateMap<Country, CountryGetDto>();
+                configuration.CreateMap<ContinentCreateDto, Continent>();
+                configuration.CreateMap<CountryCreateDto, Country>();
+            });
 
             app.UseMvc();
         }

@@ -8,7 +8,7 @@ namespace CountryClicker.Domain
         // Table columns
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public ulong Score { get; set; }
+        public long Score { get; set; }
 
         // Navigation properties
         [InverseProperty(nameof(PlayerSubscription.Group))]

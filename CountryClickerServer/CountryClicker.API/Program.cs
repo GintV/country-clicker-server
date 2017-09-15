@@ -23,7 +23,8 @@ namespace CountryClicker.API
                 {
                     var env = builderContext.HostingEnvironment;
                     config.SetBasePath(env.ContentRootPath).
-                        AddJsonFile("appsettings.json").
+                        AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).
+                        AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true).
                         AddEnvironmentVariables();
                 }).
                 UseStartup<Startup>().
