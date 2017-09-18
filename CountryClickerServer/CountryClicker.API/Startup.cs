@@ -32,7 +32,7 @@ namespace CountryClicker.API
             services.AddMvc();
             services.AddDbContext<CountryClickerDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("CountryClicker"));
+                options.UseSqlServer(Configuration.GetConnectionString("CountryClickerPublish"));
             });
             services.AddDataServices();
         }

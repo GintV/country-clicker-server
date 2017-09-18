@@ -1,4 +1,5 @@
 ﻿using CountryClicker.Data;
+using CountryClicker.Domain;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
@@ -6,11 +7,14 @@ using System.Collections.Generic;
 namespace CountryClicker.DataService
 {
     public interface IDataService<TEntity, TIdentifier>
+        where TEntity : IEntity
+        where TIdentifier : IComparable
     {
         EntityEntry Create(TEntity instance);
         void CreateMany(TEntity[] instances);
         EntityEntry Delete(TEntity instance);
         void DeleteMany(TEntity[] instances);
+        bool Exists(TIdentifier id);
         TEntity Get(TIdentifier id);
         IEnumerable<TEntity> GetMany();
         int SaveChanges();
@@ -19,6 +23,8 @@ namespace CountryClicker.DataService
     }
 
     public abstract class DataService<TEntity, TIdentifier> : IDataService<TEntity, TIdentifier>
+        where TEntity : IEntity
+        where TIdentifier : IComparable
     {
         protected CountryClickerDbContext m_context;
 
@@ -26,8 +32,10 @@ namespace CountryClicker.DataService
         {
             m_context = context;
         }
+
         public EntityEntry Create(TEntity instance) => m_context.Add((object)instance);
         public EntityEntry Delete(TEntity instance) => m_context.Remove((object)instance);
+        public bool Exists(TIdentifier id) => Get(id) != null;
         public EntityEntry Update(TEntity instance) => m_context.Update((object)instance);
         public int SaveChanges() => m_context.SaveChanges();
 

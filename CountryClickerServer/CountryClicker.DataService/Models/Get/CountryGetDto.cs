@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CountryClicker.DataService.Models.Get
 {
-    public class CountryGetDto
+    public class CountryGetDto : IGetableDto<Guid>
     {
         public Guid Id { get; set; }
         public string Title { get; set; }

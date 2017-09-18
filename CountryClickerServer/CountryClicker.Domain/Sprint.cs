@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CountryClicker.Domain
 {
-    public class Sprint
+    public class Sprint : IEntity
     {
         // Table columns
         public Guid Id { get; set; }

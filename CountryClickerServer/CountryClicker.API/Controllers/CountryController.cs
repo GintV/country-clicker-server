@@ -13,49 +13,17 @@ using CountryClicker.DataService.Models.Get;
 namespace CountryClicker.API.Controllers
 {
     [Route(ApiBasePath + nameof(Country))]
-    public class CountryController : Controller
+    public class CountryController : BaseController<Country, Guid, CountryCreateDto, CountryGetDto>
     {
-        private IDataService<Country, Guid> m_countryDataService;
-
-        public CountryController(IDataService<Country, Guid> countryDataService)
-        {
-            m_countryDataService = countryDataService;
-        }
-
-        [HttpGet]
-        public IActionResult GetCountries()
-        {
-            var result = m_countryDataService.GetMany();
-            return new JsonResult(result);
-        }
-
-        [HttpGet("{id}", Name ="GetCountry")]
-        public IActionResult GetCountry(Guid id)
-        {
-            var result = m_countryDataService.Get(id);
-
-            if (result == null)
-                return NotFound();
-
-            var instance = Mapper.Map<CountryGetDto>(result);
-            return Ok(instance);
-        }
+        public CountryController(IDataService<Country, Guid> countryDataService) : base(countryDataService) { }
 
         [HttpPost]
-        public IActionResult CreateCountry([FromBody] CountryCreateDto country)
+        public override IActionResult CreateResource([FromBody] CountryCreateDto createResource)
         {
-            if (country == null)
-                return BadRequest();
+            if (createResource != null && createResource.ContinentId.HasValue && m_resourceDataService.Exists(createResource.ContinentId.Value))
+                return base.CreateResource(createResource);
 
-            var instance = Mapper.Map<Country>(country);
-
-            m_countryDataService.Create(instance);
-            m_countryDataService.SaveChanges();
-
-            var countryr = Mapper.Map<CountryGetDto>(instance);
-
-
-            return CreatedAtRoute("GetCountry", new { id = countryr.Id }, countryr);
+            return BadRequest();
         }
     }
 }

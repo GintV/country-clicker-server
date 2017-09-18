@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CountryClicker.Domain
 {
-    public class User
+    public class User : IEntity
     {
         // Table columns
         public Guid Id { get; set; }

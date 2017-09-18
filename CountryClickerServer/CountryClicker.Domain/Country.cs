@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CountryClicker.Domain
 {
-    public class Country : Group
+    public class Country : Group, IEntity
     {
         // Table columns
         public Guid ContinentId { get; set; }

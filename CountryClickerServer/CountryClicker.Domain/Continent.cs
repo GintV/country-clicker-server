@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CountryClicker.Domain
 {
-    public class Continent : Group
+    public class Continent : Group, IEntity
     {
         // Navigation properties
         [InverseProperty(nameof(Country.Continent))]

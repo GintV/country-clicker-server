@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CountryClicker.Domain
 {
-    public class GroupSprint
+    public class GroupSprint : IEntity
     {
         // Table columns
         public Guid Id { get; set; }
