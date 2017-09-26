@@ -41,7 +41,7 @@ namespace CountryClicker.API
             });
             services.AddDbContext<CountryClickerDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("CountryClickerProduction"));
+                options.UseSqlServer(Configuration.GetConnectionString("CountryClicker"));
             });
             services.AddDataServices();
             services.AddSwaggerGen(setup =>
