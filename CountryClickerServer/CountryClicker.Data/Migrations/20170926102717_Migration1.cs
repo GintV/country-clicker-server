@@ -13,7 +13,7 @@ namespace CountryClicker.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FinishTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FinishTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Score = table.Column<long>(type: "bigint", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -94,14 +94,13 @@ namespace CountryClicker.Data.Migrations
                 name: "PlayerSprints",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Score = table.Column<long>(type: "bigint", nullable: false),
-                    SprintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SprintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Score = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlayerSprints", x => x.Id);
+                    table.PrimaryKey("PK_PlayerSprints", x => new { x.PlayerId, x.SprintId });
                     table.ForeignKey(
                         name: "FK_PlayerSprints_Players_PlayerId",
                         column: x => x.PlayerId,
@@ -117,25 +116,24 @@ namespace CountryClicker.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupSprint",
+                name: "GroupSprints",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Score = table.Column<long>(type: "bigint", nullable: false),
-                    SprintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SprintId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Score = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupSprint", x => x.Id);
+                    table.PrimaryKey("PK_GroupSprints", x => new { x.GroupId, x.SprintId });
                     table.ForeignKey(
-                        name: "FK_GroupSprint_Group_GroupId",
+                        name: "FK_GroupSprints_Group_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Group",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GroupSprint_Sprints_SprintId",
+                        name: "FK_GroupSprints_Sprints_SprintId",
                         column: x => x.SprintId,
                         principalTable: "Sprints",
                         principalColumn: "Id",
@@ -146,14 +144,13 @@ namespace CountryClicker.Data.Migrations
                 name: "PlayerSubscriptions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PlayerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SubscribeTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlayerSubscriptions", x => x.Id);
+                    table.PrimaryKey("PK_PlayerSubscriptions", x => new { x.PlayerId, x.GroupId });
                     table.ForeignKey(
                         name: "FK_PlayerSubscriptions_Group_GroupId",
                         column: x => x.GroupId,
@@ -184,24 +181,14 @@ namespace CountryClicker.Data.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupSprint_GroupId",
-                table: "GroupSprint",
-                column: "GroupId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GroupSprint_SprintId",
-                table: "GroupSprint",
+                name: "IX_GroupSprints_SprintId",
+                table: "GroupSprints",
                 column: "SprintId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Players_UserId",
                 table: "Players",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PlayerSprints_PlayerId",
-                table: "PlayerSprints",
-                column: "PlayerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlayerSprints_SprintId",
@@ -212,17 +199,12 @@ namespace CountryClicker.Data.Migrations
                 name: "IX_PlayerSubscriptions_GroupId",
                 table: "PlayerSubscriptions",
                 column: "GroupId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PlayerSubscriptions_PlayerId",
-                table: "PlayerSubscriptions",
-                column: "PlayerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "GroupSprint");
+                name: "GroupSprints");
 
             migrationBuilder.DropTable(
                 name: "PlayerSprints");

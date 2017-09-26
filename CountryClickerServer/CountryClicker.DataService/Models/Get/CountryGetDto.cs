@@ -1,10 +1,11 @@
-﻿using System;
+﻿using CountryClicker.Domain;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CountryClicker.DataService.Models.Get
 {
-    public class CountryGetDto : IGetableDto<Guid>
+    public class CountryGetDto : IGetDto<Country, Guid>
     {
         public Guid Id { get; set; }
         public string Title { get; set; }

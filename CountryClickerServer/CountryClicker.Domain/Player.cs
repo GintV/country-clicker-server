@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CountryClicker.Domain
 {
-    public class Player : IEntity
+    public class Player : IParentableEntity<Guid>
     {
         // Table columns
         public Guid Id { get; set; }
@@ -16,9 +17,12 @@ namespace CountryClicker.Domain
         public User User { get; set; }
 
         [InverseProperty(nameof(PlayerSubscription.Player))]
-        public PlayerSubscription[] SubscribedGroups { get; set; }
+        public ICollection<PlayerSubscription> SubscribedGroups { get; set; }
 
         [InverseProperty(nameof(CustomGroup.CreatedBy))]
-        public CustomGroup[] CreatedCustomGroups { get; set; }
+        public ICollection<CustomGroup> CreatedCustomGroups { get; set; }
+
+        // Interface realization
+        public Guid ParentId(string parentEntityName) => UserId;
     }
 }

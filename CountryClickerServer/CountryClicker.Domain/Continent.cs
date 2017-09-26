@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CountryClicker.Domain
@@ -7,6 +8,6 @@ namespace CountryClicker.Domain
     {
         // Navigation properties
         [InverseProperty(nameof(Country.Continent))]
-        public Country[] ContinentCountries { get; set; }
+        public ICollection<Country> ContinentCountries { get; set; }
     }
 }

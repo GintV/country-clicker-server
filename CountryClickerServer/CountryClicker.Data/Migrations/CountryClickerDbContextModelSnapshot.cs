@@ -42,22 +42,17 @@ namespace CountryClicker.Data.Migrations
 
             modelBuilder.Entity("CountryClicker.Domain.GroupSprint", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
                     b.Property<Guid>("GroupId");
-
-                    b.Property<long>("Score");
 
                     b.Property<Guid>("SprintId");
 
-                    b.HasKey("Id");
+                    b.Property<long>("Score");
 
-                    b.HasIndex("GroupId");
+                    b.HasKey("GroupId", "SprintId");
 
                     b.HasIndex("SprintId");
 
-                    b.ToTable("GroupSprint");
+                    b.ToTable("GroupSprints");
                 });
 
             modelBuilder.Entity("CountryClicker.Domain.Player", b =>
@@ -80,18 +75,13 @@ namespace CountryClicker.Data.Migrations
 
             modelBuilder.Entity("CountryClicker.Domain.PlayerSprint", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
                     b.Property<Guid>("PlayerId");
-
-                    b.Property<long>("Score");
 
                     b.Property<Guid>("SprintId");
 
-                    b.HasKey("Id");
+                    b.Property<long>("Score");
 
-                    b.HasIndex("PlayerId");
+                    b.HasKey("PlayerId", "SprintId");
 
                     b.HasIndex("SprintId");
 
@@ -100,20 +90,15 @@ namespace CountryClicker.Data.Migrations
 
             modelBuilder.Entity("CountryClicker.Domain.PlayerSubscription", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<Guid>("PlayerId");
 
                     b.Property<Guid>("GroupId");
 
-                    b.Property<Guid>("PlayerId");
-
                     b.Property<DateTime>("SubscribeTime");
 
-                    b.HasKey("Id");
+                    b.HasKey("PlayerId", "GroupId");
 
                     b.HasIndex("GroupId");
-
-                    b.HasIndex("PlayerId");
 
                     b.ToTable("PlayerSubscriptions");
                 });
@@ -123,7 +108,7 @@ namespace CountryClicker.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("FinishTime");
+                    b.Property<DateTime?>("FinishTime");
 
                     b.Property<long>("Score");
 

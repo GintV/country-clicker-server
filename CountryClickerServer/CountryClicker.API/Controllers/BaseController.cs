@@ -1,7 +1,9 @@
-﻿using CountryClicker.DataService;
+﻿using CountryClicker.API.RoutingParameters;
+using CountryClicker.DataService;
 using CountryClicker.DataService.Models.Create;
 using CountryClicker.DataService.Models.Get;
 using CountryClicker.Domain;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,61 +14,90 @@ using static CountryClicker.API.Constants;
 
 namespace CountryClicker.API.Controllers
 {
-    public interface IBaseController<TEntity, TIdentifier, TCreateDto, TGetDto>
+    public interface IBaseController<TEntity, TIdentifier>
         where TEntity : IEntity
-        where TIdentifier : IComparable
-        where TCreateDto : ICreatableDto
-        where TGetDto : IGetableDto<TIdentifier>
     {
-        IActionResult CreateResource(TCreateDto createResource);
-        IActionResult GetResource(TIdentifier id);
-        IActionResult GetResources();
+        IActionResult CreateResource<TCreateDto, TGetDto>(TCreateDto createDto)
+            where TCreateDto : ICreateDto<TEntity>
+            where TGetDto : IGetDto<TEntity, TIdentifier>;
+        IActionResult GetResource<TGetDto>(TIdentifier id)
+            where TGetDto : IGetDto<TEntity, TIdentifier>;
+        IActionResult GetResources<TGetDto>()
+            where TGetDto : IGetDto<TEntity, TIdentifier>;
     }
 
-    public class BaseController<TEntity, TIdentifier, TCreateDto, TGetDto> : Controller, IBaseController<TEntity, TIdentifier, TCreateDto, TGetDto>
-        where TEntity : IEntity
-        where TIdentifier : IComparable
-        where TCreateDto : ICreatableDto
-        where TGetDto : IGetableDto<TIdentifier>
+    public class BaseController<TEntity, TIdentifier> : Controller, IBaseController<TEntity, TIdentifier>
+        where TEntity : class, IEntity
     {
-        protected IDataService<TEntity, TIdentifier> m_resourceDataService;
+        protected string GetResourceRouteName { get; }
+        protected IGetResourceRouteParameters<TIdentifier> GetResourceRouteValues { get; }
+        protected IDataService<TEntity, TIdentifier> ResourceDataService { get; }
 
-        public BaseController(IDataService<TEntity, TIdentifier> resourceDataService)
+        public BaseController(IDataService<TEntity, TIdentifier> resourceDataService, string getResourceRouteName,
+            IGetResourceRouteParameters<TIdentifier> getResourceRouteValues = null)
         {
-            m_resourceDataService = resourceDataService;
+            ResourceDataService = resourceDataService;
+            GetResourceRouteName = getResourceRouteName;
+            GetResourceRouteValues = getResourceRouteValues;
         }
 
-        [HttpGet(IdentifierPath)]
-        public IActionResult GetResource(TIdentifier id)
+        public virtual IActionResult CreateResource<TCreateDto, TGetDto>(TCreateDto createDto)
+            where TCreateDto : ICreateDto<TEntity>
+            where TGetDto : IGetDto<TEntity, TIdentifier>
         {
-            var resource = m_resourceDataService.Get(id);
+            if (createDto == null || !ModelState.IsValid)
+                return BadRequest();
+            var resource = Map<TEntity>(createDto);
+            if (!ResourceDataService.AreRelationshipsValid(resource))
+                return NotFound();
+            ResourceDataService.Create(resource);
+            ResourceDataService.SaveChanges();
+            var resourceToReturn = Map<TGetDto>(resource);
+            return CreatedAtRoute(GetResourceRouteName, GetResourceRouteValues?.GetRouteParameters(resourceToReturn.Id) ??
+                new { id = resourceToReturn.Id }, resourceToReturn);
+        }
 
+        public virtual IActionResult CreateResource(TIdentifier id) => ResourceDataService.Get(id) == null ?
+            NotFound() : new StatusCodeResult(StatusCodes.Status409Conflict);
+
+        public virtual IActionResult DeleteResource(TIdentifier id)
+        {
+            var resource = ResourceDataService.Get(id);
             if (resource == null)
                 return NotFound();
+            ResourceDataService.Delete(resource);
+            ResourceDataService.SaveChanges();
+            return NoContent();
+        }
 
+        public virtual IActionResult GetResource<TGetDto>(TIdentifier id)
+            where TGetDto : IGetDto<TEntity, TIdentifier>
+        {
+            var resource = ResourceDataService.Get(id);
+            if (resource == null)
+                return NotFound();
             return Ok(Map<TGetDto>(resource));
         }
 
-        [HttpGet]
-        public IActionResult GetResources()
+        public virtual IActionResult GetResources<TGetDto>()
+            where TGetDto : IGetDto<TEntity, TIdentifier>
         {
-            return Ok(Map<IEnumerable<TGetDto>>(m_resourceDataService.GetMany()));
+            return Ok(Map<IEnumerable<TGetDto>>(ResourceDataService.GetMany()));
         }
 
-        [HttpPost]
-        public virtual IActionResult CreateResource([FromBody] TCreateDto createResource)
+        public virtual IActionResult UpdateResource<TUpdateDto, TGetDto>(TIdentifier id, TUpdateDto updateDto)
+            where TUpdateDto : IUpdateDto<TEntity>
+            where TGetDto : IGetDto<TEntity, TIdentifier>
         {
-            if (createResource == null || !ModelState.IsValid)
-                return BadRequest();
-
-            var resource = Map<TEntity>(createResource);
-
-            m_resourceDataService.Create(resource);
-            m_resourceDataService.SaveChanges();
-
-            var resourceToReturn = Map<TGetDto>(resource);
-
-            return CreatedAtRoute(new { id = resourceToReturn.Id }, resourceToReturn);
+            var resource = ResourceDataService.Get(id);
+            if (resource == null)
+                return NotFound();
+            Map(updateDto, resource);
+            if (!ResourceDataService.AreRelationshipsValid(resource))
+                return NotFound();
+            ResourceDataService.Update(resource);
+            ResourceDataService.SaveChanges();
+            return Ok(Map<TGetDto>(resource));
         }
     }
 }

@@ -2,7 +2,9 @@
 using CountryClicker.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace CountryClicker.DataService
 {
@@ -10,10 +12,10 @@ namespace CountryClicker.DataService
     {
         public CountryDataService(CountryClickerDbContext context) : base(context) { }
 
-        public override void CreateMany(Country[] instances) => m_context.Countries.AddRange(instances);
-        public override void DeleteMany(Country[] instances) => m_context.Countries.RemoveRange(instances);
-        public override Country Get(Guid id) => m_context.Countries.Find(id);
-        public override IEnumerable<Country> GetMany() => m_context.Countries;
-        public override void UpdateMany(Country[] instances) => m_context.Countries.UpdateRange(instances);
+        public override Country Get(Guid id) => Context.Countries.Find(id);
+        public override IQueryable<Country> GetMany() => Context.Countries;
+        public override IQueryable<Country> GetManyFilter(params (string column, string value)[] columnValuePairs) => Context.Countries.
+            FromSql($"SELECT * FROM dbo.[Group] WHERE Discriminator = 'Country' AND {CombineFilter(columnValuePairs)}".ToString());
+        public override bool AreRelationshipsValid(Country instance) => Context.Continents.Find(instance.ContinentId) != null;
     }
 }

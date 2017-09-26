@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CountryClicker.Domain
 {
-    public class City : Group, IEntity
+    public class City : Group, IParentableEntity<Guid>
     {
         // Table columns
         public Guid CountryId { get; set; }
@@ -13,5 +13,8 @@ namespace CountryClicker.Domain
         // Navigation properties
         [ForeignKey(nameof(CountryId))]
         public Country Country { get; set; }
+
+        // Interface realization
+        public Guid ParentId(string parentEntityName) => CountryId;
     }
 }

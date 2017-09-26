@@ -11,13 +11,13 @@ namespace CountryClicker.Domain
         public Guid Id { get; set; }
         public long Score { get; set; }
         public DateTime StartTime { get; set; }
-        public DateTime FinishTime { get; set; }
+        public DateTime? FinishTime { get; set; }
 
         // Navigation properties
         [InverseProperty(nameof(PlayerSprint.Sprint))]
-        public PlayerSprint[] PlayerSprints { get; set; }
+        public ICollection<PlayerSprint> PlayerSprints { get; set; }
 
         [InverseProperty(nameof(GroupSprint.Sprint))]
-        public GroupSprint[] GroupSprints { get; set; }
+        public ICollection<GroupSprint> GroupSprints { get; set; }
     }
 }

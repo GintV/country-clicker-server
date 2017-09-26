@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CountryClicker.Domain
@@ -12,6 +13,6 @@ namespace CountryClicker.Domain
 
         // Navigation properties
         [InverseProperty(nameof(PlayerSubscription.Group))]
-        public PlayerSubscription[] GroupSubscribers { get; set; }
+        public ICollection<PlayerSubscription> GroupSubscribers { get; set; }
     }
 }

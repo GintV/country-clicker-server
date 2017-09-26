@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Models\Get\IGetDto.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CountryClicker.Data\CountryClicker.Data.csproj" />
   </ItemGroup>
 

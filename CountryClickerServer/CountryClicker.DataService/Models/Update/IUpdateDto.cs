@@ -4,5 +4,5 @@ using System.Text;
 
 namespace CountryClicker.DataService.Models.Create
 {
-    public interface ICreatableDto { }
+    public interface IUpdateDto<TEntity> { }
 }

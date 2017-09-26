@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CountryClicker.Domain
 {
-    public class Country : Group, IEntity
+    public class Country : Group, IParentableEntity<Guid>
     {
         // Table columns
         public Guid ContinentId { get; set; }
@@ -13,6 +14,9 @@ namespace CountryClicker.Domain
         public Continent Continent { get; set; }
 
         [InverseProperty(nameof(City.Country))]
-        public City[] CountryCities { get; set; }
+        public ICollection<City> CountryCities { get; set; }
+
+        // Interface realization
+        public Guid ParentId(string parentEntityName) => ContinentId;
     }
 }

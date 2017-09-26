@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
 
 namespace CountryClicker.Domain
 {
-    public class GroupSprint : IEntity
+    public class GroupSprint : IParentableEntity<Guid>
     {
         // Table columns
-        public Guid Id { get; set; }
         public long Score { get; set; }
         public Guid GroupId { get; set; }
         public Guid SprintId { get; set; }
@@ -19,5 +20,8 @@ namespace CountryClicker.Domain
 
         [ForeignKey(nameof(SprintId))]
         public Sprint Sprint { get; set; }
+
+        // Interface realization
+        public Guid ParentId(string parentEntityName) => parentEntityName == nameof(Domain.Group) ? GroupId : SprintId;
     }
 }

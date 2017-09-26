@@ -4,8 +4,8 @@ using System.Text;
 
 namespace CountryClicker.DataService.Models.Get
 {
-    public interface IGetableDto<TIdentifier>
+    public interface IGetDto<TEntity, TIdentifier>
     {
-        TIdentifier Id { get; set; }
+        TIdentifier Id { get; }
     }
 }

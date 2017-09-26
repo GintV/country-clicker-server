@@ -13,9 +13,27 @@ using static AutoMapper.Mapper;
 
 namespace CountryClicker.API.Controllers
 {
-    [Route(ApiBasePath + nameof(Continent))]
-    public class ContinentController : BaseController<Continent, Guid, ContinentCreateDto, ContinentGetDto>
+    public class ContinentController : BaseController<Continent, Guid>
     {
-        public ContinentController(IDataService<Continent, Guid> continentDataService) : base(continentDataService) { }
+        private const string m_basePath = ApiBasePath + PathSep + nameof(Continent);
+        private const string m_basePathId = m_basePath + PathSep + Id;
+        private const string m_getResourceRouteName = "Get" + nameof(Continent);
+
+        public ContinentController(IDataService<Continent, Guid> continentDataService) : base(continentDataService, m_getResourceRouteName) { }
+
+        [HttpPost(m_basePath)]
+        public IActionResult CreateResource([FromBody] ContinentCreateDto createDto) => 
+            base.CreateResource<ContinentCreateDto, ContinentGetDto>(createDto);
+        [HttpPost(m_basePathId)]
+        public override IActionResult CreateResource(Guid id) => base.CreateResource(id);
+        [HttpDelete(m_basePathId)]
+        public override IActionResult DeleteResource(Guid id) => base.DeleteResource(id);
+        [HttpGet(m_basePathId, Name = m_getResourceRouteName)]
+        public IActionResult GetResource(Guid id) => base.GetResource<ContinentGetDto>(id);
+        [HttpGet(m_basePath)]
+        public IActionResult GetResources() => base.GetResources<ContinentGetDto>();
+        [HttpPut(m_basePathId)]
+        public IActionResult UpdateResource(Guid id, [FromBody] ContinentUpdateDto updateDto) =>
+            base.UpdateResource<ContinentUpdateDto, ContinentGetDto>(id, updateDto);
     }
 }

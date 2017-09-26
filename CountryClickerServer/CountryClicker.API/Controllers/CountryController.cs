@@ -12,18 +12,41 @@ using CountryClicker.DataService.Models.Get;
 
 namespace CountryClicker.API.Controllers
 {
-    [Route(ApiBasePath + nameof(Country))]
-    public class CountryController : BaseController<Country, Guid, CountryCreateDto, CountryGetDto>
+    public class CountryController : BaseParentableController<Country, Guid, Guid>
     {
-        public CountryController(IDataService<Country, Guid> countryDataService) : base(countryDataService) { }
+        private const string m_basePath = ApiBasePath + PathSep + nameof(Country);
+        private const string m_basePathId = m_basePath + PathSep + Id;
+        private const string m_baseParentablePath = ApiBasePath + PathSep + nameof(Continent) + PathSep + ParentId + PathSep + nameof(Country);
+        private const string m_baseParentablePathId = m_baseParentablePath + PathSep + Id;
+        private const string m_getResourceRouteName = "Get" + nameof(Country);
 
-        [HttpPost]
-        public override IActionResult CreateResource([FromBody] CountryCreateDto createResource)
-        {
-            if (createResource != null && createResource.ContinentId.HasValue && m_resourceDataService.Exists(createResource.ContinentId.Value))
-                return base.CreateResource(createResource);
+        public CountryController(IDataService<Country, Guid> countryDataService) :
+            base(countryDataService, m_getResourceRouteName, nameof(Continent))
+        { }
 
-            return BadRequest();
-        }
+        [HttpPost(m_basePath)]
+        public IActionResult CreateResource([FromBody] CountryCreateDto createDto) =>
+            base.CreateResource<CountryCreateDto, CountryGetDto>(createDto);
+        [HttpPost(m_basePathId)]
+        public override IActionResult CreateResource(Guid id) => base.CreateResource(id);
+        [HttpDelete(m_basePathId)]
+        public override IActionResult DeleteResource(Guid id) => base.DeleteResource(id);
+        [HttpGet(m_basePathId, Name = m_getResourceRouteName)]
+        public IActionResult GetResource(Guid id) => base.GetResource<CountryGetDto>(id);
+        [HttpGet(m_basePath)]
+        public IActionResult GetResources() => base.GetResources<CountryGetDto>();
+        [HttpPut(m_basePathId)]
+        public IActionResult UpdateResource(Guid id, [FromBody] CountryUpdateDto updateDto) =>
+            base.UpdateResource<CountryUpdateDto, CountryGetDto>(id, updateDto);
+
+        [HttpPost(m_baseParentablePath)]
+        public IActionResult CreateParentableResource(Guid parentId, [FromBody] CountryParentableCreateDto createDto) =>
+            base.CreateParentableResource<CountryParentableCreateDto, CountryGetDto>(parentId, createDto);
+        [HttpPost(m_baseParentablePathId)]
+        public override IActionResult CreateParentableResource(Guid parentId, Guid id) => base.CreateParentableResource(parentId, id);
+        [HttpGet(m_baseParentablePathId)]
+        public IActionResult GetParentableResource(Guid parentId, Guid id) => base.GetParentableResource<CountryGetDto>(parentId, id);
+        [HttpGet(m_baseParentablePath)]
+        public IActionResult GetParentableResources(Guid parentId) => base.GetParentableResources<CountryGetDto>(parentId);
     }
 }
