@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using CountryClicker.DataService;
 using CountryClicker.Domain;
 using static CountryClicker.API.Constants;
-using CountryClicker.DataService.Models.Create;
 using AutoMapper;
-using CountryClicker.DataService.Models.Get;
+using CountryClicker.API.Models.Create;
+using CountryClicker.API.Models.Get;
+using CountryClicker.API.Models.Update;
 
 namespace CountryClicker.API.Controllers
 {

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CountryClicker.DataService;
 using CountryClicker.Domain;
 using static CountryClicker.API.Constants;
-using CountryClicker.DataService.Models.Create;
-using AutoMapper;
-using CountryClicker.DataService.Models.Get;
+using CountryClicker.API.Models.Update;
+using CountryClicker.API.Models.Get;
+using CountryClicker.API.Models.Create;
 
 namespace CountryClicker.API.Controllers
 {

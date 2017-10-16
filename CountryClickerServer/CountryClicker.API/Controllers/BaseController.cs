@@ -1,7 +1,9 @@
-﻿using CountryClicker.API.RoutingParameters;
+﻿using CountryClicker.API.Models.Create;
+using CountryClicker.API.Models.Error;
+using CountryClicker.API.Models.Get;
+using CountryClicker.API.Models.Update;
+using CountryClicker.API.RoutingParameters;
 using CountryClicker.DataService;
-using CountryClicker.DataService.Models.Create;
-using CountryClicker.DataService.Models.Get;
 using CountryClicker.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +22,14 @@ namespace CountryClicker.API.Controllers
         IActionResult CreateResource<TCreateDto, TGetDto>(TCreateDto createDto)
             where TCreateDto : ICreateDto<TEntity>
             where TGetDto : IGetDto<TEntity, TIdentifier>;
+        IActionResult CreateResource(TIdentifier id);
+        IActionResult DeleteResource(TIdentifier id);
         IActionResult GetResource<TGetDto>(TIdentifier id)
             where TGetDto : IGetDto<TEntity, TIdentifier>;
         IActionResult GetResources<TGetDto>()
+            where TGetDto : IGetDto<TEntity, TIdentifier>;
+        IActionResult UpdateResource<TUpdateDto, TGetDto>(TIdentifier id, TUpdateDto updateDto)
+            where TUpdateDto : IUpdateDto<TEntity>
             where TGetDto : IGetDto<TEntity, TIdentifier>;
     }
 
@@ -45,15 +52,17 @@ namespace CountryClicker.API.Controllers
             where TCreateDto : ICreateDto<TEntity>
             where TGetDto : IGetDto<TEntity, TIdentifier>
         {
-            if (createDto == null || !ModelState.IsValid)
-                return BadRequest();
+            if (createDto == null)
+                return BadRequest(BadRequestDto.InvalidData);
+            if (!ModelState.IsValid)
+                return BadRequest(); // -- 400 missing required fields, consider mentioning which
             var resource = Map<TEntity>(createDto);
             if (!ResourceDataService.AreRelationshipsValid(resource))
-                return NotFound();
+                return NotFound(); // -- 404 parent with id does not exist, consider mentioning which
             ResourceDataService.Create(resource);
             ResourceDataService.SaveChanges();
             var resourceToReturn = Map<TGetDto>(resource);
-            return CreatedAtRoute(GetResourceRouteName, GetResourceRouteValues?.GetRouteParameters(resourceToReturn.Id) ??
+            return CreatedAtRoute(GetResourceRouteName, GetResourceRouteValues?.GetRouteParameters(resourceToReturn.Id) ?? // consider changing so that parent create would be reflected correctly
                 new { id = resourceToReturn.Id }, resourceToReturn);
         }
 
@@ -64,7 +73,7 @@ namespace CountryClicker.API.Controllers
         {
             var resource = ResourceDataService.Get(id);
             if (resource == null)
-                return NotFound();
+                return NotFound(); // -- 400 resource not found etc
             ResourceDataService.Delete(resource);
             ResourceDataService.SaveChanges();
             return NoContent();
@@ -91,10 +100,12 @@ namespace CountryClicker.API.Controllers
         {
             var resource = ResourceDataService.Get(id);
             if (resource == null)
-                return NotFound();
+                return NotFound(); // -- 404 no res 
+            if (!ModelState.IsValid)
+                return BadRequest(); // -- 400 missing req fields
             Map(updateDto, resource);
             if (!ResourceDataService.AreRelationshipsValid(resource))
-                return NotFound();
+                return NotFound(); // -- 404 parent with id does not exist, consider mentioning which
             ResourceDataService.Update(resource);
             ResourceDataService.SaveChanges();
             return Ok(Map<TGetDto>(resource));

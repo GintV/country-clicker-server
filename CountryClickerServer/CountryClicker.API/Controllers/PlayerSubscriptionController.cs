@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CountryClicker.DataService;
 using CountryClicker.Domain;
-using CountryClicker.DataService.Models.Create;
 using AutoMapper;
-using CountryClicker.DataService.Models.Get;
 using static CountryClicker.API.Constants;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using CountryClicker.API.RoutingParameters;
+using CountryClicker.API.Models.Get;
+using CountryClicker.API.Models.Create;
+using CountryClicker.API.Models.Update;
 
 namespace CountryClicker.API.Controllers
 {

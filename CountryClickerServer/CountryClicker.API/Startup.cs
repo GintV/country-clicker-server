@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CountryClicker.API.Models.Create;
+using CountryClicker.API.Models.Get;
+using CountryClicker.Data;
+using CountryClicker.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using CountryClicker.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Routing;
-using CountryClicker.Domain;
-using CountryClicker.DataService.Models.Create;
-using CountryClicker.DataService.Models.Get;
-using Swashbuckle.AspNetCore.Swagger;
-using static CountryClicker.API.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
+using static CountryClicker.API.Constants;
 
 namespace CountryClicker.API
 {

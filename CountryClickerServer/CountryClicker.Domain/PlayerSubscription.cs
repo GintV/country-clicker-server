@@ -8,7 +8,7 @@ namespace CountryClicker.Domain
     public class PlayerSubscription : IParentableEntity<Guid>
     {
         // Table columns
-        public DateTime SubscribeTime { get; set; }
+        public DateTime? SubscribeTime { get; set; }
         public Guid PlayerId { get; set; }
         public Guid GroupId { get; set; }
 

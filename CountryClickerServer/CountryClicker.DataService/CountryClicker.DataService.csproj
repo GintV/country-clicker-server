@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Models\Get\IGetDto.cs" />
+    <Compile Remove="Models\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Models\**" />
   </ItemGroup>
 
   <ItemGroup>

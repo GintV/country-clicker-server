@@ -1,7 +1,7 @@
-﻿using CountryClicker.API.RoutingParameters;
+﻿using CountryClicker.API.Models.Create;
+using CountryClicker.API.Models.Get;
+using CountryClicker.API.RoutingParameters;
 using CountryClicker.DataService;
-using CountryClicker.DataService.Models.Create;
-using CountryClicker.DataService.Models.Get;
 using CountryClicker.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

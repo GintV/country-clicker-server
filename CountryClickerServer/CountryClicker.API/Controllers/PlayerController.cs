@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CountryClicker.DataService;
 using CountryClicker.Domain;
-using CountryClicker.DataService.Models.Create;
 using AutoMapper;
-using CountryClicker.DataService.Models.Get;
+using CountryClicker.API.Models.Update;
 using static CountryClicker.API.Constants;
+using CountryClicker.API.Models.Create;
+using CountryClicker.API.Models.Get;
 
 namespace CountryClicker.API.Controllers
 {
