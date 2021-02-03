@@ -12,10 +12,13 @@ using CountryClicker.API.RoutingParameters;
 using CountryClicker.API.Models.Create;
 using CountryClicker.API.Models.Get;
 using CountryClicker.API.Models.Update;
+using CountryClicker.API.QueryingParameters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CountryClicker.API.Controllers
 {
-    public class PlayerSprintController : BaseParentableController<PlayerSprint, Guid[], Guid>
+    [Authorize]
+    public class PlayerSprintController : BaseChildController<PlayerSprint, Guid[], Guid>
     {
         private const string m_basePath = ApiBasePath + PathSep + nameof(PlayerSprint);
         private const string m_basePathId = m_basePath + PathSep + "({playerId},{sprintId})";
@@ -37,25 +40,26 @@ namespace CountryClicker.API.Controllers
         [HttpGet(m_basePathId, Name = m_getResourceRouteName)]
         public IActionResult GetResource(Guid playerId, Guid sprintId) => base.GetResource<PlayerSprintGetDto>(new[] { playerId, sprintId });
         [HttpGet(m_basePath)]
-        public IActionResult GetResources() => base.GetResources<PlayerSprintGetDto>();
+        public IActionResult GetResources(BaseResourceParameters baseResourceParameters) =>
+            base.GetResources<PlayerSprintGetDto>(baseResourceParameters);
         [HttpPut(m_basePathId)]
         public IActionResult UpdateResource(Guid playerId, Guid sprintId, [FromBody] PlayerSprintUpdateDto updateDto) =>
             base.UpdateResource<PlayerSprintUpdateDto, PlayerSprintGetDto>(new[] { playerId, sprintId }, updateDto);
 
         [HttpPost(m_baseParentablePath)]
         public IActionResult CreateParentableResource(Guid parentId, [FromBody] PlayerSprintFromPlayerParentableCreateDto createDto) =>
-            base.CreateParentableResource<PlayerSprintFromPlayerParentableCreateDto, PlayerSprintGetDto>(parentId, createDto);
+            base.CreateResourceAsChild<PlayerSprintFromPlayerParentableCreateDto, PlayerSprintGetDto>(parentId, createDto);
         [HttpPost(m_baseParentablePathId)]
         public IActionResult CreateParentableResource(Guid parentId, Guid playerId, Guid sprintId) =>
-            base.CreateParentableResource(parentId, new[] { playerId, sprintId });
+            base.CreateResourceAsChild(parentId, new[] { playerId, sprintId });
         [HttpGet(m_baseParentablePathId)]
         public IActionResult GetParentableResource(Guid parentId, Guid playerId, Guid sprintId) =>
-            base.GetParentableResource<PlayerSprintGetDto>(parentId, new[] { playerId, sprintId });
+            base.GetResourceAsChild<PlayerSprintGetDto>(parentId, new[] { playerId, sprintId });
         [HttpGet(m_baseParentablePath)]
-        public IActionResult GetParentableResources(Guid parentId) => base.GetParentableResources<PlayerSprintGetDto>(parentId);
+        public IActionResult GetParentableResources(Guid parentId) => base.GetResourcesAsChildren<PlayerSprintGetDto>(parentId);
     }
 
-    public class PlayerSprint2Controller : BaseParentableController<PlayerSprint, Guid[], Guid>
+    public class PlayerSprint2Controller : BaseChildController<PlayerSprint, Guid[], Guid>
     {
         private const string m_baseParentablePath = ApiBasePath + PathSep + nameof(Sprint) + PathSep + ParentId + PathSep + nameof(PlayerSprint);
         private const string m_baseParentablePathId = m_baseParentablePath + PathSep + "({playerId},{sprintId})";
@@ -68,17 +72,17 @@ namespace CountryClicker.API.Controllers
         [HttpPost(m_baseParentablePath)]
         [SwaggerOperation(Tags = new[] { nameof(PlayerSprint) })]
         public IActionResult CreateParentableResource(Guid parentId, [FromBody] PlayerSprintFromSprintParentableCreateDto createDto) =>
-            base.CreateParentableResource<PlayerSprintFromSprintParentableCreateDto, PlayerSprintGetDto>(parentId, createDto);
+            base.CreateResourceAsChild<PlayerSprintFromSprintParentableCreateDto, PlayerSprintGetDto>(parentId, createDto);
         [HttpPost(m_baseParentablePathId)]
         [SwaggerOperation(Tags = new[] { nameof(PlayerSprint) })]
         public IActionResult CreateParentableResource(Guid parentId, Guid playerId, Guid sprintId) =>
-            base.CreateParentableResource(parentId, new[] { playerId, sprintId });
+            base.CreateResourceAsChild(parentId, new[] { playerId, sprintId });
         [HttpGet(m_baseParentablePathId)]
         [SwaggerOperation(Tags = new[] { nameof(PlayerSprint) })]
         public IActionResult GetParentableResource(Guid parentId, Guid playerId, Guid sprintId) =>
-            base.GetParentableResource<PlayerSprintGetDto>(parentId, new[] { playerId, sprintId });
+            base.GetResourceAsChild<PlayerSprintGetDto>(parentId, new[] { playerId, sprintId });
         [HttpGet(m_baseParentablePath)]
         [SwaggerOperation(Tags = new[] { nameof(PlayerSprint) })]
-        public IActionResult GetParentableResources(Guid parentId) => base.GetParentableResources<PlayerSprintGetDto>(parentId);
+        public IActionResult GetParentableResources(Guid parentId) => base.GetResourcesAsChildren<PlayerSprintGetDto>(parentId);
     }
 }

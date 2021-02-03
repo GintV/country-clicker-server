@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CountryClicker.API", "CountryClicker.API\CountryClicker.API.csproj", "{13AADF1E-56D7-4800-8863-EFA9007B8680}"
 EndProject
@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CountryClicker.Domain", "Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CountryClicker.Data", "CountryClicker.Data\CountryClicker.Data.csproj", "{6470F499-C2BD-42D9-AE3B-58EB005047F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryClicker.DataService", "CountryClicker.DataService\CountryClicker.DataService.csproj", "{F16C94E4-8BDE-43A3-8184-7304EB3B62B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CountryClicker.DataService", "CountryClicker.DataService\CountryClicker.DataService.csproj", "{F16C94E4-8BDE-43A3-8184-7304EB3B62B2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CountryClicker.Client", "CountryClicker.Client\CountryClicker.Client.csproj", "{10C76158-9490-4D51-AE3F-B7A8F2519DD6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ginsoft.IDP", "Ginsoft.IDP\Ginsoft.IDP.csproj", "{05B9CE9B-7102-45D1-98EE-5CE36B6D89B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{F16C94E4-8BDE-43A3-8184-7304EB3B62B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F16C94E4-8BDE-43A3-8184-7304EB3B62B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F16C94E4-8BDE-43A3-8184-7304EB3B62B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10C76158-9490-4D51-AE3F-B7A8F2519DD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10C76158-9490-4D51-AE3F-B7A8F2519DD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10C76158-9490-4D51-AE3F-B7A8F2519DD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10C76158-9490-4D51-AE3F-B7A8F2519DD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05B9CE9B-7102-45D1-98EE-5CE36B6D89B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05B9CE9B-7102-45D1-98EE-5CE36B6D89B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05B9CE9B-7102-45D1-98EE-5CE36B6D89B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05B9CE9B-7102-45D1-98EE-5CE36B6D89B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

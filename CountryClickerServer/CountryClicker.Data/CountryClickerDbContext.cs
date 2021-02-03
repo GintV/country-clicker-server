@@ -15,7 +15,6 @@ namespace CountryClicker.Data
         public DbSet<PlayerSprint> PlayerSprints { get; set; }
         public DbSet<PlayerSubscription> PlayerSubscriptions { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
-        public DbSet<User> Users { get; set; }
 
         public CountryClickerDbContext(DbContextOptions options) : base(options) { }
 

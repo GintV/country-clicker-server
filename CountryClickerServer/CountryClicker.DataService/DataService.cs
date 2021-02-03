@@ -15,11 +15,12 @@ namespace CountryClicker.DataService
         void CreateMany(TEntity[] instances);
         EntityEntry Delete(TEntity instance);
         void DeleteMany(TEntity[] instances);
+        void DeleteReferences(TEntity instance);
         bool Exists(TIdentifier id);
         TEntity Get(TIdentifier id);
         IQueryable<TEntity> GetMany();
-        IQueryable<TEntity> GetManyFilter(params (string column, string value)[] columnValuePair);
-        bool AreRelationshipsValid(TEntity instance);
+        IQueryable<TEntity> GetManyFilter(params (string column, string value)[] columnValuePairs);
+        (bool IsValid, string NotFoundParentId) AreRelationshipsValid(TEntity instance);
         int SaveChanges();
         EntityEntry Update(TEntity instance);
         void UpdateMany(TEntity[] instances);
@@ -30,7 +31,7 @@ namespace CountryClicker.DataService
     {
         protected CountryClickerDbContext Context { get; }
 
-        public DataService(CountryClickerDbContext context)
+        protected DataService(CountryClickerDbContext context)
         {
             Context = context;
         }
@@ -39,15 +40,17 @@ namespace CountryClicker.DataService
         public void CreateMany(TEntity[] instances) => Context.AddRange(instances);
         public EntityEntry Delete(TEntity instance) => Context.Remove(instance);
         public void DeleteMany(TEntity[] instances) => Context.RemoveRange(instances);
+
         public bool Exists(TIdentifier id) => Get(id) != null;
         public EntityEntry Update(TEntity instance) => Context.Update(instance);
         public void UpdateMany(TEntity[] instances) => Context.UpdateRange(instances);
         public int SaveChanges() => Context.SaveChanges();
 
+        public abstract void DeleteReferences(TEntity instance);
         public abstract TEntity Get(TIdentifier id);
         public abstract IQueryable<TEntity> GetMany();
         public abstract IQueryable<TEntity> GetManyFilter(params (string column, string value)[] columnValuePairs);
-        public abstract bool AreRelationshipsValid(TEntity instance);
+        public abstract (bool IsValid, string NotFoundParentId) AreRelationshipsValid(TEntity instance);
 
         protected string CombineFilter((string column, string value)[] columnValuePairs)
         {

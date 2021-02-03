@@ -1,0 +1,97 @@
+﻿@model CountryClicker.Client.Controllers.ClicksPostModel
+
+@{
+    ViewBag.Title = "Click";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="row">
+        <br />
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Click-O-Meter</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <h2 class="text-center" id="number"></h2>
+        </div>
+    </div>
+    <div class="row">
+        <br />
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <label class="btn btn-block btn-lg button-click" onclick="incrementValue()">Click!</label>
+        </div>
+    </div>
+    <div class="row">
+        <br />
+    </div>
+    <div class="row">
+        <br />
+    </div>
+    <form asp-route="Click" onsubmit="clearValue()">
+        <input type="hidden" id="count" asp-for="Count" />
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-6 col-md-offset-3">
+                    <button class="btn btn-primary btn-block btn-lg">Commit!</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    window.onload = function () {
+        var data = sessionStorage.getItem('number');
+        if (data == null) {
+            sessionStorage.setItem('number', 0);
+            data = 0;
+        }
+        console.log(document.getElementById('number').innerHTML);
+        document.getElementById('number').innerHTML = data;
+    };
+
+    function incrementValue() {
+        var data = sessionStorage.getItem('number');
+        if (data == null) {
+            sessionStorage.setItem('number', 0);
+            data = 0;
+        }
+        ++data;
+        sessionStorage.setItem('number', data);
+        document.getElementById('number').innerHTML = data;
+
+        //var value = parseInt(document.getElementById('number').value, 10);
+        //value = isNaN(value) ? 0 : value;
+        //value++;
+        //document.getElementById('number').value = value;
+        // Save data to sessionStorage
+        //sessionStorage.setItem('key', 'value');
+
+        // Get saved data from sessionStorage
+        //var data = sessionStorage.getItem('key');
+
+        // Remove saved data from sessionStorage
+        //sessionStorage.removeItem('key');
+
+        // Remove all saved data from sessionStorage
+        //sessionStorage.clear();
+    }
+
+    function clearValue() {
+        var data = sessionStorage.getItem('number');
+        //console.log(data);
+        //console.log(document.getElementById('count'));
+        document.getElementById('count').value = data;
+        //console.log(document.getElementById('count').value);
+
+        sessionStorage.setItem('number', 0);
+    }
+</script>

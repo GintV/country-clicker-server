@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace CountryClicker.API.Models.Error
 {
-    public class ErrorDto
+    public interface IErrorDto
     {
-        public virtual string Error { get; }
-        public string ErrorDescription { get; protected set; }
+        string Error { get; }
+        string ErrorDescription { get; }
     }
 }

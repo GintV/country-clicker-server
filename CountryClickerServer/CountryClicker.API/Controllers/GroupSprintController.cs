@@ -12,10 +12,13 @@ using CountryClicker.API.RoutingParameters;
 using CountryClicker.API.Models.Create;
 using CountryClicker.API.Models.Get;
 using CountryClicker.API.Models.Update;
+using CountryClicker.API.QueryingParameters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CountryClicker.API.Controllers
 {
-    public class GroupSprintController : BaseParentableController<GroupSprint, Guid[], Guid>
+    [Authorize]
+    public class GroupSprintController : BaseChildController<GroupSprint, Guid[], Guid>
     {
         private const string m_basePath = ApiBasePath + PathSep + nameof(GroupSprint);
         private const string m_basePathId = m_basePath + PathSep + "({groupId},{sprintId})";
@@ -37,25 +40,26 @@ namespace CountryClicker.API.Controllers
         [HttpGet(m_basePathId, Name = m_getResourceRouteName)]
         public IActionResult GetResource(Guid groupId, Guid sprintId) => base.GetResource<GroupSprintGetDto>(new[] { groupId, sprintId });
         [HttpGet(m_basePath)]
-        public IActionResult GetResources() => base.GetResources<GroupSprintGetDto>();
+        public IActionResult GetResources(BaseResourceParameters baseResourceParameters) =>
+            base.GetResources<GroupSprintGetDto>(baseResourceParameters);
         [HttpPut(m_basePathId)]
         public IActionResult UpdateResource(Guid groupId, Guid sprintId, [FromBody] GroupSprintUpdateDto updateDto) =>
             base.UpdateResource<GroupSprintUpdateDto, GroupSprintGetDto>(new[] { groupId, sprintId }, updateDto);
 
         [HttpPost(m_baseParentablePath)]
         public IActionResult CreateParentableResource(Guid parentId, [FromBody] GroupSprintFromGroupParentableCreateDto createDto) =>
-            base.CreateParentableResource<GroupSprintFromGroupParentableCreateDto, GroupSprintGetDto>(parentId, createDto);
+            base.CreateResourceAsChild<GroupSprintFromGroupParentableCreateDto, GroupSprintGetDto>(parentId, createDto);
         [HttpPost(m_baseParentablePathId)]
         public IActionResult CreateParentableResource(Guid parentId, Guid groupId, Guid sprintId) =>
-            base.CreateParentableResource(parentId, new[] { groupId, sprintId });
+            base.CreateResourceAsChild(parentId, new[] { groupId, sprintId });
         [HttpGet(m_baseParentablePathId)]
         public IActionResult GetParentableResource(Guid parentId, Guid groupId, Guid sprintId) =>
-            base.GetParentableResource<GroupSprintGetDto>(parentId, new[] { groupId, sprintId });
+            base.GetResourceAsChild<GroupSprintGetDto>(parentId, new[] { groupId, sprintId });
         [HttpGet(m_baseParentablePath)]
-        public IActionResult GetParentableResources(Guid parentId) => base.GetParentableResources<GroupSprintGetDto>(parentId);
+        public IActionResult GetParentableResources(Guid parentId) => base.GetResourcesAsChildren<GroupSprintGetDto>(parentId);
     }
 
-    public class GroupSprint2Controller : BaseParentableController<GroupSprint, Guid[], Guid>
+    public class GroupSprint2Controller : BaseChildController<GroupSprint, Guid[], Guid>
     {
         private const string m_baseParentablePath = ApiBasePath + PathSep + nameof(Sprint) + PathSep + ParentId + PathSep + nameof(GroupSprint);
         private const string m_baseParentablePathId = m_baseParentablePath + PathSep + "({groupId},{sprintId})";
@@ -68,17 +72,17 @@ namespace CountryClicker.API.Controllers
         [HttpPost(m_baseParentablePath)]
         [SwaggerOperation(Tags = new[] { nameof(GroupSprint) })]
         public IActionResult CreateParentableResource(Guid parentId, [FromBody] GroupSprintFromSprintParentableCreateDto createDto) =>
-            base.CreateParentableResource<GroupSprintFromSprintParentableCreateDto, GroupSprintGetDto>(parentId, createDto);
+            base.CreateResourceAsChild<GroupSprintFromSprintParentableCreateDto, GroupSprintGetDto>(parentId, createDto);
         [HttpPost(m_baseParentablePathId)]
         [SwaggerOperation(Tags = new[] { nameof(GroupSprint) })]
         public IActionResult CreateParentableResource(Guid parentId, Guid groupId, Guid sprintId) =>
-            base.CreateParentableResource(parentId, new[] { groupId, sprintId });
+            base.CreateResourceAsChild(parentId, new[] { groupId, sprintId });
         [HttpGet(m_baseParentablePathId)]
         [SwaggerOperation(Tags = new[] { nameof(GroupSprint) })]
         public IActionResult GetParentableResource(Guid parentId, Guid groupId, Guid sprintId) =>
-            base.GetParentableResource<GroupSprintGetDto>(parentId, new[] { groupId, sprintId });
+            base.GetResourceAsChild<GroupSprintGetDto>(parentId, new[] { groupId, sprintId });
         [HttpGet(m_baseParentablePath)]
         [SwaggerOperation(Tags = new[] { nameof(GroupSprint) })]
-        public IActionResult GetParentableResources(Guid parentId) => base.GetParentableResources<GroupSprintGetDto>(parentId);
+        public IActionResult GetParentableResources(Guid parentId) => base.GetResourcesAsChildren<GroupSprintGetDto>(parentId);
     }
 }

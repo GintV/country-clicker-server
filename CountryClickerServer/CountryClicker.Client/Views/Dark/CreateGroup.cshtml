@@ -1,0 +1,47 @@
+﻿@model CountryClicker.Client.Controllers.CreateGroupModel
+
+@{
+    ViewBag.Title = "Create Group";
+    Layout = "_Layout";
+}
+
+<h1>Create Custom Group</h1>
+
+@if (!Model.CanCreate)
+{
+    <div class="alert alert-info alert-dismissable fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Info!</strong> You cannot create group, if you already own 5 or more groups.
+    </div>
+}
+
+<div class="row">
+    <div class="form-group col-sm-12"></div>
+</div>
+
+
+<form method="post" asp-antiforgery="true">
+    
+    <div class="container row">
+    <div class="col-sm-4 well well-sm">
+
+        <div asp-validation-summary="ModelOnly"></div>
+
+        <div class="form-group">
+            <label asp-for="Title"></label>
+            <input class="form-control" asp-for="Title" />
+            <span asp-validation-for="Title"></span>
+        </div>
+    </div>
+    </div>
+    <div>
+        @if (Model.CanCreate)
+        {
+            <input type="submit" class="btn btn-primary" value="Create" />
+        }
+        else
+        {
+            <input type="submit" disabled class="btn btn-primary" value="Create" />
+        }
+    </div>
+</form>

@@ -12,10 +12,13 @@ using CountryClicker.API.RoutingParameters;
 using CountryClicker.API.Models.Get;
 using CountryClicker.API.Models.Create;
 using CountryClicker.API.Models.Update;
+using CountryClicker.API.QueryingParameters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CountryClicker.API.Controllers
 {
-    public class PlayerSubscriptionController : BaseParentableController<PlayerSubscription, Guid[], Guid>
+    [Authorize]
+    public class PlayerSubscriptionController : BaseChildController<PlayerSubscription, Guid[], Guid>
     {
         private const string m_basePath = ApiBasePath + PathSep + nameof(PlayerSubscription);
         private const string m_basePathId = m_basePath + PathSep + "({playerId},{groupId})";
@@ -38,25 +41,26 @@ namespace CountryClicker.API.Controllers
         [HttpGet(m_basePathId, Name = m_getResourceRouteName)]
         public IActionResult GetResource(Guid playerId, Guid groupId) => base.GetResource<PlayerSubscriptionGetDto>(new[] { playerId, groupId });
         [HttpGet(m_basePath)]
-        public IActionResult GetResources() => base.GetResources<PlayerSubscriptionGetDto>();
+        public IActionResult GetResources(BaseResourceParameters baseResourceParameters) =>
+            base.GetResources<PlayerSubscriptionGetDto>(baseResourceParameters);
         [HttpPut(m_basePathId)]
         public IActionResult UpdateResource(Guid playerId, Guid groupId, [FromBody] PlayerSubscriptionUpdateDto updateDto) =>
             base.UpdateResource<PlayerSubscriptionUpdateDto, PlayerSubscriptionGetDto>(new[] { playerId, groupId }, updateDto);
 
         [HttpPost(m_baseParentablePath)]
         public IActionResult CreateParentableResource(Guid parentId, [FromBody] PlayerSubscriptionFromPlayerParentableCreateDto createDto) =>
-            base.CreateParentableResource<PlayerSubscriptionFromPlayerParentableCreateDto, PlayerSubscriptionGetDto>(parentId, createDto);
+            base.CreateResourceAsChild<PlayerSubscriptionFromPlayerParentableCreateDto, PlayerSubscriptionGetDto>(parentId, createDto);
         [HttpPost(m_baseParentablePathId)]
         public IActionResult CreateParentableResource(Guid parentId, Guid playerId, Guid groupId) =>
-            base.CreateParentableResource(parentId, new[] { playerId, groupId });
+            base.CreateResourceAsChild(parentId, new[] { playerId, groupId });
         [HttpGet(m_baseParentablePathId)]
         public IActionResult GetParentableResource(Guid parentId, Guid playerId, Guid groupId) =>
-            base.GetParentableResource<PlayerSubscriptionGetDto>(parentId, new[] { playerId, groupId });
+            base.GetResourceAsChild<PlayerSubscriptionGetDto>(parentId, new[] { playerId, groupId });
         [HttpGet(m_baseParentablePath)]
-        public IActionResult GetParentableResources(Guid parentId) => base.GetParentableResources<PlayerSubscriptionGetDto>(parentId);
+        public IActionResult GetParentableResources(Guid parentId) => base.GetResourcesAsChildren<PlayerSubscriptionGetDto>(parentId);
     }
 
-    public class PlayerSubscription2Controller : BaseParentableController<PlayerSubscription, Guid[], Guid>
+    public class PlayerSubscription2Controller : BaseChildController<PlayerSubscription, Guid[], Guid>
     {
         private const string m_baseParentablePath = ApiBasePath + PathSep + nameof(Group) + PathSep + ParentId + PathSep +
             nameof(PlayerSubscription);
@@ -70,17 +74,17 @@ namespace CountryClicker.API.Controllers
         [HttpPost(m_baseParentablePath)]
         [SwaggerOperation(Tags = new[] { nameof(PlayerSubscription) })]
         public IActionResult CreateParentableResource(Guid parentId, [FromBody] PlayerSubscriptionFromGroupParentableCreateDto createDto) =>
-            base.CreateParentableResource<PlayerSubscriptionFromGroupParentableCreateDto, PlayerSubscriptionGetDto>(parentId, createDto);
+            base.CreateResourceAsChild<PlayerSubscriptionFromGroupParentableCreateDto, PlayerSubscriptionGetDto>(parentId, createDto);
         [HttpPost(m_baseParentablePathId)]
         [SwaggerOperation(Tags = new[] { nameof(PlayerSubscription) })]
         public IActionResult CreateParentableResource(Guid parentId, Guid playerId, Guid groupId) =>
-            base.CreateParentableResource(parentId, new[] { playerId, groupId });
+            base.CreateResourceAsChild(parentId, new[] { playerId, groupId });
         [HttpGet(m_baseParentablePathId)]
         [SwaggerOperation(Tags = new[] { nameof(PlayerSubscription) })]
         public IActionResult GetParentableResource(Guid parentId, Guid playerId, Guid groupId) =>
-            base.GetParentableResource<PlayerSubscriptionGetDto>(parentId, new[] { playerId, groupId });
+            base.GetResourceAsChild<PlayerSubscriptionGetDto>(parentId, new[] { playerId, groupId });
         [HttpGet(m_baseParentablePath)]
         [SwaggerOperation(Tags = new[] { nameof(PlayerSubscription) })]
-        public IActionResult GetParentableResources(Guid parentId) => base.GetParentableResources<PlayerSubscriptionGetDto>(parentId);
+        public IActionResult GetParentableResources(Guid parentId) => base.GetResourcesAsChildren<PlayerSubscriptionGetDto>(parentId);
     }
 }
