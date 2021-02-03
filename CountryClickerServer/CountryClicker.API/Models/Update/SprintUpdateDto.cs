@@ -6,6 +6,7 @@ namespace CountryClicker.API.Models.Update
 {
     public class SprintUpdateDto : IUpdateDto<Sprint>
     {
+        [Required]
         public long Score { get; set; }
         [Required]
         public DateTime StartTime { get; set; }

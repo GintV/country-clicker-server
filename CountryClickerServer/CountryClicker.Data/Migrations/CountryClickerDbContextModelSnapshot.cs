@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System;
 
@@ -64,11 +62,9 @@ namespace CountryClicker.Data.Migrations
 
                     b.Property<long>("Score");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Players");
                 });
@@ -117,20 +113,6 @@ namespace CountryClicker.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sprints");
-                });
-
-            modelBuilder.Entity("CountryClicker.Domain.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Password");
-
-                    b.Property<string>("Username");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CountryClicker.Domain.City", b =>
@@ -192,14 +174,6 @@ namespace CountryClicker.Data.Migrations
                     b.HasOne("CountryClicker.Domain.Sprint", "Sprint")
                         .WithMany("GroupSprints")
                         .HasForeignKey("SprintId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("CountryClicker.Domain.Player", b =>
-                {
-                    b.HasOne("CountryClicker.Domain.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

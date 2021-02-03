@@ -10,41 +10,52 @@ using AutoMapper;
 using CountryClicker.API.Models.Create;
 using CountryClicker.API.Models.Get;
 using CountryClicker.API.Models.Update;
+using CountryClicker.API.QueryingParameters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CountryClicker.API.Controllers
 {
-    public class CityController : BaseParentableController<City, Guid, Guid>
+    [Authorize]
+    public class CityController : BaseChildController<City, Guid, Guid>
     {
-        private const string m_basePath = ApiBasePath + PathSep + nameof(City);
-        private const string m_basePathId = m_basePath + PathSep + Id;
-        private const string m_baseParentablePath = ApiBasePath + PathSep + nameof(Country) + PathSep + ParentId + PathSep + nameof(City);
-        private const string m_baseParentablePathId = m_baseParentablePath + PathSep + Id;
-        private const string m_getResourceRouteName = "Get" + nameof(City);
+        private const string BasePath = ApiBasePath + PathSep + nameof(City);
+        private const string BasePathId = BasePath + PathSep + Id;
+        private const string BasePathAsChild = ApiBasePath + PathSep + nameof(Country) + PathSep + ParentId + PathSep + nameof(City);
+        private const string BasePathAsChildId = BasePathAsChild + PathSep + Id;
+        private const string GetResourceRouteName = "Get" + nameof(City);
 
-        public CityController(IDataService<City, Guid> cityDataService) : base(cityDataService, m_getResourceRouteName, nameof(Country)) { }
+        public CityController(IDataService<City, Guid> cityDataService) : base(cityDataService, GetResourceRouteName, nameof(Country)) { }
 
-        [HttpPost(m_basePath)]
+        [HttpPost(BasePath)]
         public IActionResult CreateResource([FromBody] CityCreateDto createDto) => base.CreateResource<CityCreateDto, CityGetDto>(createDto);
-        [HttpPost(m_basePathId)]
-        public override IActionResult CreateResource(Guid id) => base.CreateResource(id);
-        [HttpDelete(m_basePathId)]
-        public override IActionResult DeleteResource(Guid id) => base.DeleteResource(id);
-        [HttpGet(m_basePathId, Name = m_getResourceRouteName)]
+
+        [HttpPost(BasePathId)]
+        public new IActionResult CreateResource(Guid id) => base.CreateResource(id);
+
+        [HttpDelete(BasePathId)]
+        public new IActionResult DeleteResource(Guid id) => base.DeleteResource(id);
+
+        [HttpGet(BasePathId, Name = GetResourceRouteName)]
         public IActionResult GetResource(Guid id) => base.GetResource<CityGetDto>(id);
-        [HttpGet(m_basePath)]
-        public IActionResult GetResources() => base.GetResources<CityGetDto>();
-        [HttpPut(m_basePathId)]
+
+        [HttpGet(BasePath)]
+        public IActionResult GetResources(BaseResourceParameters baseResourceParameters) => base.GetResources<CityGetDto>(baseResourceParameters);
+
+        [HttpPut(BasePathId)]
         public IActionResult UpdateResource(Guid id, [FromBody] CityUpdateDto updateDto) =>
             base.UpdateResource<CityUpdateDto, CityGetDto>(id, updateDto);
 
-        [HttpPost(m_baseParentablePath)]
-        public IActionResult CreateParentableResource(Guid parentId, [FromBody] CityParentableCreateDto createDto) =>
-            base.CreateParentableResource<CityParentableCreateDto, CityGetDto>(parentId, createDto);
-        [HttpPost(m_baseParentablePathId)]
-        public override IActionResult CreateParentableResource(Guid parentId, Guid id) => base.CreateParentableResource(parentId, id);
-        [HttpGet(m_baseParentablePathId)]
-        public IActionResult GetParentableResource(Guid parentId, Guid id) => base.GetParentableResource<CityGetDto>(parentId, id);
-        [HttpGet(m_baseParentablePath)]
-        public IActionResult GetParentableResources(Guid parentId) => base.GetParentableResources<CityGetDto>(parentId);
+        [HttpPost(BasePathAsChild)]
+        public IActionResult CreateResourceAsChild(Guid parentId, [FromBody] CityParentableCreateDto createDto) =>
+            CreateResourceAsChild<CityParentableCreateDto, CityGetDto>(parentId, createDto);
+
+        [HttpPost(BasePathAsChildId)]
+        public new IActionResult CreateResourceAsChild(Guid parentId, Guid id) => base.CreateResourceAsChild(parentId, id);
+
+        [HttpGet(BasePathAsChildId)]
+        public IActionResult GetParentableResource(Guid parentId, Guid id) => base.GetResourceAsChild<CityGetDto>(parentId, id);
+
+        [HttpGet(BasePathAsChild)]
+        public IActionResult GetParentableResources(Guid parentId) => base.GetResourcesAsChildren<CityGetDto>(parentId);
     }
 }

@@ -9,10 +9,10 @@ namespace CountryClicker.API.Models.Create
         [Required]
         public string Nickname { get; set; }
         [Required]
-        public Guid? UserId { get; set; }
+        public string UserId { get; set; }
     }
 
-    public class PlayerParentableCreateDto : IParentableCreateDto<Player, Guid>
+    /*public class PlayerParentableCreateDto : IParentableCreateDto<Player, Guid>
     {
         [Required]
         public string Nickname { get; set; }
@@ -20,5 +20,5 @@ namespace CountryClicker.API.Models.Create
 
         // Interface realization
         public void SetParentId(Guid parentId) => UserId = parentId;
-    }
+    }*/
 }

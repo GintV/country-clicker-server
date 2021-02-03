@@ -1,7 +1,10 @@
 ﻿using CountryClicker.API.Models.Create;
 using CountryClicker.API.Models.Get;
+using CountryClicker.API.Models.Update;
 using CountryClicker.Data;
 using CountryClicker.Domain;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +29,17 @@ namespace CountryClicker.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(setup => setup.AddPolicy("AllowMyClient", configure =>
+            {
+                configure.WithOrigins("https://localhost:44389").AllowAnyHeader().AllowAnyMethod().AllowCredentials().Build();
+            }));
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme).AddIdentityServerAuthentication(options =>
+            {
+                options.Authority = "https://localhost:44373/";
+                options.RequireHttpsMetadata = true;
+                options.ApiName = "countryclickerapi";
+                options.ApiSecret = "apisecret";
+            });
             services.AddMvc(setup =>
             {
                 setup.ReturnHttpNotAcceptable = true;
@@ -67,17 +81,21 @@ namespace CountryClicker.API
                 configuration.CreateMap<City, CityGetDto>();
                 configuration.CreateMap<CityCreateDto, City>();
                 configuration.CreateMap<CityParentableCreateDto, City>();
+                configuration.CreateMap<CityUpdateDto, City>();
 
                 configuration.CreateMap<Continent, ContinentGetDto>();
                 configuration.CreateMap<ContinentCreateDto, Continent>();
+                configuration.CreateMap<ContinentUpdateDto, Continent>();
 
                 configuration.CreateMap<Country, CountryGetDto>();
                 configuration.CreateMap<CountryCreateDto, Country>();
                 configuration.CreateMap<CountryParentableCreateDto, Country>();
+                configuration.CreateMap<CountryUpdateDto, Country>();
 
                 configuration.CreateMap<CustomGroup, CustomGroupGetDto>();
                 configuration.CreateMap<CustomGroupCreateDto, CustomGroup>();
                 configuration.CreateMap<CustomGroupParentableCreateDto, CustomGroup>();
+                configuration.CreateMap<CustomGroupUpdateDto, CustomGroup>();
 
                 configuration.CreateMap<GroupSprint, GroupSprintGetDto>();
                 configuration.CreateMap<GroupSprintCreateDto, GroupSprint>();
@@ -86,7 +104,7 @@ namespace CountryClicker.API
 
                 configuration.CreateMap<Player, PlayerGetDto>();
                 configuration.CreateMap<PlayerCreateDto, Player>();
-                configuration.CreateMap<PlayerParentableCreateDto, Player>();
+                configuration.CreateMap<PlayerUpdateDto, Player>();
 
                 configuration.CreateMap<PlayerSprint, PlayerSprintGetDto>();
                 configuration.CreateMap<PlayerSprintCreateDto, PlayerSprint>();
@@ -101,9 +119,9 @@ namespace CountryClicker.API
                 configuration.CreateMap<Sprint, SprintGetDto>();
                 configuration.CreateMap<SprintCreateDto, Sprint>();
 
-                configuration.CreateMap<User, UserGetDto>();
-                configuration.CreateMap<UserCreateDto, User>();
             });
+
+            app.UseAuthentication();
 
             app.UseMvc();
 

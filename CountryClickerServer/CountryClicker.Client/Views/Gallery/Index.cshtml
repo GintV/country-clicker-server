@@ -1,0 +1,23 @@
+﻿<!--model ImageGallery.Client.ViewModels.GalleryIndexViewModel
+
+<div class="bottomMarginDefault">
+</div>
+
+<div class="container">
+    //foreach (var item in Model.Images)
+    //{
+        <div class="pull-left col-md-4">
+            <div>
+                <img class="thumbnailImage" src='($"https://localhost:44322/images/{item.FileName}")' />
+            </div>
+            <div>
+                <div class="h5">item.Title</div>
+                <div class="bottomMarginDefault">
+                    <a aasp-action="EditImage" aasp-controller="Gallery" asp-route-id="item.Id">Edit title</a> |
+                    <a aasp-action="DeleteImage" aasp-controller="Gallery" asp-route-id="item.Id">Delete image</a>
+                </div>
+            </div>
+        </div>
+    //}
+</div>
+-->

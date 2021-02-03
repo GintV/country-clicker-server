@@ -1,0 +1,108 @@
+﻿@using CountryClicker.Client.Controllers
+@model CountryClicker.Client.Controllers.SubscriptionsModel
+
+@{
+    ViewBag.Title = "Subscriptions";
+    Layout = "_Layout";
+}
+
+<h1>Subscriptions</h1>
+
+@if (!Model.CanSubscribe)
+{
+    <div class="alert alert-info alert-dismissable fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Info!</strong> You cannot subscribe to any more groups, if you already subscribed to 10 or more groups.
+    </div>
+}
+
+<div class="form-group col-sm-12"></div>
+
+<table class="table table-hover" style="table-layout: fixed">
+    <thead>
+        <tr style="line-height: 40px; min-height: 40px; height: 40px;">
+            <th colspan="8">Continent</th>
+            <th colspan="4">Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr style="line-height: 40px; min-height: 40px; height: 40px">
+            <td colspan="8">@Model.Continent.Title</td>
+            <td colspan="4">@Model.Continent.Score</td>
+        </tr>
+    </tbody>
+</table>
+<table class="table table-hover" style="table-layout: fixed">
+    <thead>
+        <tr style="line-height: 40px; min-height: 40px; height: 40px;">
+            <th colspan="8">Country</th>
+            <th colspan="4">Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr style="line-height: 40px; min-height: 40px; height: 40px">
+            <td colspan="8">@Model.Country.Title</td>
+            <td colspan="4">@Model.Country.Score</td>
+        </tr>
+    </tbody>
+</table>
+<table class="table table-hover" style="table-layout: fixed">
+    <thead>
+        <tr style="line-height: 40px; min-height: 40px; height: 40px;">
+            <th colspan="8">Custom Groups</th>
+            <th colspan="3">Score</th>
+            <th colspan="1"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var group in Model.CustomGroups)
+        {
+            <tr style="line-height: 40px; min-height: 40px; height: 40px">
+                <td colspan="8">@group.Title</td>
+                <td colspan="3">@group.Score</td>
+                <td colspan="1">
+                    <a href="#" data-href="/Dark/UnsubscribeGroup?id=@group.Id" data-toggle="modal" data-target="#confirm-delete">
+                        <svg viewBox="0 0 17 16" width="16" height="16">
+                            <use xlink:href="/svg/sprite.svg#si-glyph-button-error" />
+                        </svg>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="form-group col-sm-12"></div>
+
+@if (!Model.CanSubscribe)
+{
+    <a class="btn btn-primary" disabled>Subscribe more</a>
+}
+else
+{
+    <a class="btn btn-primary" asp-controller="Dark" asp-action="Subscribe">Subscribe more</a>
+}
+
+<div class="form-group col-sm-12"></div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Unsubscribe</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to unsubscribe a group, and after that clicks you make won't count to this group.</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok">Unsubscribe</a>
+            </div>
+        </div>
+    </div>
+</div>

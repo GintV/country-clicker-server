@@ -8,9 +8,10 @@ namespace CountryClicker.API.Models.Update
     {
         [Required]
         public string Title { get; set; }
+        [Required]
         public long Score { get; set; }
 
         [Required]
-        public Guid? CreatedBy { get; set; }
+        public Guid? CreatedById { get; set; }
     }
 }
